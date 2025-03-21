@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinchez Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+        
+        .greeting {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .sub-text {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 200px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .app-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+        }
+        
+        .card-title-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .login-text {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        
+        .arrow {
+            margin-left: 10px;
+            font-size: 1.3rem;
+        }
+        
+        /* Individual Card Styles */
+        .instagram {
+            background: linear-gradient(to right, #833AB4, #FD1D1D);
+        }
+        
+        .instagram .card-title {
+            font-family: 'Brush Script MT', cursive;
+        }
+        
+        .whatsapp-business {
+            background: linear-gradient(to right, #075E54, #128C7E);
+        }
+        
+        .whatsapp-business .card-title {
+            font-family: 'Tahoma', sans-serif;
+        }
+        
+        .whatsapp-messenger {
+            background: linear-gradient(to right, #25D366, #128C7E);
+        }
+        
+        .whatsapp-messenger .card-title {
+            font-family: 'Verdana', sans-serif;
+        }
+        
+        .spotify {
+            background: linear-gradient(to right, #1DB954, #191414);
+        }
+        
+        .spotify .card-title {
+            font-family: 'Circular', 'Helvetica', sans-serif;
+            letter-spacing: -1px;
+        }
+        
+        .youtube {
+            background: linear-gradient(to right, #FF0000, #282828);
+        }
+        
+        .youtube .card-title {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 900;
+        }
+        
+        .facebook {
+            background: linear-gradient(to right, #1877F2, #3b5998);
+        }
+        
+        .facebook .card-title {
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+        }
+        
+        .twitter {
+            background: linear-gradient(to right, #1DA1F2, #14171A);
+        }
+        
+        .twitter .card-title {
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        
+        .linkedin {
+            background: linear-gradient(to right, #0077B5, #00a0dc);
+        }
+        
+        .linkedin .card-title {
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: -0.5px;
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header {
+                margin-bottom: 20px;
+            }
+            
+            .greeting {
+                font-size: 2rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="greeting" id="greeting">Hello, Pinchez</h1>
+        <p class="sub-text">Where would you like to log in today?</p>
+    </div>
+    
+    <div class="card-grid">
+        <div class="card instagram">
+            <div class="card-header">
+                <div class="card-title-container">
+                    <img src="images/instaicon.png" alt="Instagram" class="app-icon" />
+                    <div class="card-title">Instagram</div>
+                </div>
+                <img src="images/gram.jpg" alt="Profile" class="profile-icon" />
+            </div>
+            <div class="login-text">Login to Instagram <span class="arrow">→</span></div>
+        </div>
+        
+        <div class="card whatsapp-business">
+            <div class="card-header">
+                <div class="card-title-container">
+                    <img src="images/whatsappbusinessicon.png" alt="WhatsApp Business" class="app-icon" />
+                    <div class="card-title">WhatsApp Business</div>
+                </div>
+                <img src="images/whatsapp.png" alt="Profile" class="profile-icon" />
+            </div>
+            <div class="login-text">Login to Business <span class="arrow">→</span></div>
+        </div>
+        
+        <div class="card whatsapp-messenger">
+            <div class="card-header">
+                <div class="card-title-container">
+                    <img src="images/whatsappicon.jpeg" alt="WhatsApp" class="app-icon" />
+                    <div class="card-title">WhatsApp</div>
+                </div>
+                <img src="images/whatsapp.png" alt="Profile" class="profile-icon" />
+            </div>
+            <div class="login-text">Login to Messenger <span class="arrow">→</span></div>
+        </div>
+        
+        <div class="card spotify">
+            <div class="card-header">
+                <div class="card-title-container">
+                    <img src="images/spotify.png" alt="Spotify" class="app-icon" />
+                    <div class="card-title">Spotify</div>
+                </div>
+                <img src="images/spotify.png" alt="Profile" class="profile-icon" />
+            </div>
+            <div class="login-text">Login to Spotify <span class="arrow">→</span></div>
+        </div>
+        
+        <div class="card youtube">
+            <div class="card-header">
+                <div class="card-title-container">
+                    <img src="images/download.png" alt="YouTube" class="app-icon" />
+                    <div class="card-title">YouTube</div>
+                </div>
+                <img src="images/yt.jpg" alt="Profile" class="profile-icon" />
+            </div>
+            <div class="login-text">Login to YouTube <span class="arrow">→</span></div>
+        </div>
+        
+        <div class="card facebook">
+            <div class="card-header">
+                <div class="card-title-container">
+                    <img src="/api/placeholder/40/40" alt="Facebook" class="app-icon" />
+                    <div class="card-title">Facebook</div>
+                </div>
+                <img src="/api/placeholder/40/40" alt="Profile" class="profile-icon" />
+            </div>
+            <div class="login-text">Login to Facebook <span class="arrow">→</span></div>
+        </div>
+        
+        <div class="card twitter">
+            <div class="card-header">
+                <div class="card-title-container">
+                    <img src="/api/placeholder/40/40" alt="X" class="app-icon" />
+                    <div class="card-title">X</div>
+                </div>
+                <img src="/api/placeholder/40/40" alt="Profile" class="profile-icon" />
+            </div>
+            <div class="login-text">Login to X <span class="arrow">→</span></div>
+        </div>
+        
+        <div class="card linkedin">
+            <div class="card-header">
+                <div class="card-title-container">
+                    <img src="/api/placeholder/40/40" alt="LinkedIn" class="app-icon" />
+                    <div class="card-title">LinkedIn</div>
+                </div>
+                <img src="/api/placeholder/40/40" alt="Profile" class="profile-icon" />
+            </div>
+            <div class="login-text">Login to LinkedIn <span class="arrow">→</span></div>
+        </div>
+    </div>
+
+    <script>
+        // Get current time to set appropriate greeting
+        function setGreeting() {
+            const hour = new Date().getHours();
+            const greeting = document.getElementById('greeting');
+            let greetingText = '';
+            
+            if (hour >= 5 && hour < 12) {
+                greetingText = 'Good Morning, Pinchez';
+            } else if (hour >= 12 && hour < 18) {
+                greetingText = 'Good Afternoon, Pinchez';
+            } else {
+                greetingText = 'Good Evening, Pinchez';
+            }
+            
+            greeting.textContent = greetingText;
+        }
+        
+        // Set greeting on page load
+        setGreeting();
+        
+        // Update greeting every minute
+        setInterval(setGreeting, 60000);
+    </script>
+</body>
+</html>
