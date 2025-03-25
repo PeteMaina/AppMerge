@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pinchez Dashboard</title>
+    <title>Pinchez Hyper Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -17,17 +17,46 @@
             color: white;
             padding: 20px;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.05;
+            background-image: 
+                linear-gradient(0deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+                linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+            z-index: 10;
         }
         
         .header {
             text-align: center;
             margin-bottom: 30px;
             padding-top: 20px;
+            position: relative;
+        }
+        
+        .dynamic-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: blur(120px);
+            opacity: 0.6;
         }
         
         .greeting {
             font-size: 2.5rem;
             margin-bottom: 5px;
+            position: relative;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
         
         .sub-text {
@@ -42,6 +71,7 @@
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            perspective: 1000px;
         }
         
         .card {
@@ -50,268 +80,324 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            height: 200px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 250px;
+            transition: all 0.5s ease;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 60%);
+            transform: rotate(45deg);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .card:hover::before {
+            opacity: 1;
         }
         
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            transform: translateZ(20px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
         }
         
         .card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
+            z-index: 2;
         }
         
         .app-icon {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
             margin-right: 10px;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .app-icon:hover {
+            transform: rotate(360deg) scale(1.1);
         }
         
         .profile-icon {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.7);
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
         }
         
-        .card-title-container {
-            display: flex;
-            align-items: center;
+        .profile-icon:hover {
+            transform: scale(1.2) rotate(15deg);
+            box-shadow: 0 0 30px rgba(255,255,255,0.3);
         }
         
-        .card-title {
-            font-size: 1.8rem;
-            font-weight: bold;
+        .card-activity-indicator {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #00ff00, #009900);
+            box-shadow: 0 0 10px #00ff00;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.5); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.7; }
         }
         
         .login-text {
             display: flex;
             align-items: center;
             font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
         }
         
         .arrow {
             margin-left: 10px;
             font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .login-text:hover .arrow {
+            transform: translateX(10px);
+        }
+        
+        /* Particle Effect Placeholder */
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
         
         /* Individual Card Styles */
-        .instagram {
-            background: linear-gradient(to right, #833AB4, #FD1D1D);
-        }
+        .instagram { background: linear-gradient(45deg, #833AB4, #FD1D1D, #FCB045); }
+        .whatsapp-business { background: linear-gradient(45deg, #075E54, #128C7E, #25D366); }
+        .whatsapp-messenger { background: linear-gradient(45deg, #25D366, #128C7E, #075E54); }
+        .spotify { background: linear-gradient(45deg, #1DB954, #191414, #1ED760); }
+        .youtube { background: linear-gradient(45deg, #FF0000, #282828, #FF0000); }
+        .facebook { background: linear-gradient(45deg, #1877F2, #3b5998, #5B51D8); }
+        .twitter { background: linear-gradient(45deg, #1DA1F2, #14171A, #287AB9); }
+        .linkedin { background: linear-gradient(45deg, #0077B5, #00a0dc, #0E76A8); }
         
-        .instagram .card-title {
-            font-family: 'Brush Script MT', cursive;
-        }
-        
-        .whatsapp-business {
-            background: linear-gradient(to right, #075E54, #128C7E);
-        }
-        
-        .whatsapp-business .card-title {
-            font-family: 'Tahoma', sans-serif;
-        }
-        
-        .whatsapp-messenger {
-            background: linear-gradient(to right, #25D366, #128C7E);
-        }
-        
-        .whatsapp-messenger .card-title {
-            font-family: 'Verdana', sans-serif;
-        }
-        
-        .spotify {
-            background: linear-gradient(to right, #1DB954, #191414);
-        }
-        
-        .spotify .card-title {
-            font-family: 'Circular', 'Helvetica', sans-serif;
-            letter-spacing: -1px;
-        }
-        
-        .youtube {
-            background: linear-gradient(to right, #FF0000, #282828);
-        }
-        
-        .youtube .card-title {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 900;
-        }
-        
-        .facebook {
-            background: linear-gradient(to right, #1877F2, #3b5998);
-        }
-        
-        .facebook .card-title {
-            font-family: 'Segoe UI', sans-serif;
-            font-weight: bold;
-        }
-        
-        .twitter {
-            background: linear-gradient(to right, #1DA1F2, #14171A);
-        }
-        
-        .twitter .card-title {
-            font-family: 'Helvetica Neue', sans-serif;
-        }
-        
-        .linkedin {
-            background: linear-gradient(to right, #0077B5, #00a0dc);
-        }
-        
-        .linkedin .card-title {
-            font-family: 'Segoe UI', sans-serif;
-            letter-spacing: -0.5px;
-        }
-        
-        /* Mobile Responsiveness */
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .header {
-                margin-bottom: 20px;
-            }
-            
-            .greeting {
-                font-size: 2rem;
-            }
-            
             .card-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .card {
-                height: 180px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="noise-overlay"></div>
+    <div class="particle-container" id="particles"></div>
+    
     <div class="header">
+        <div class="dynamic-background" id="dynamicBackground"></div>
         <h1 class="greeting" id="greeting">Hello, Pinchez</h1>
-        <p class="sub-text">Where would you like to log in?</p>
+        <p class="sub-text">Quantum Social Convergence Portal</p>
     </div>
     
     <div class="card-grid">
         <div class="card instagram">
             <div class="card-header">
                 <div class="card-title-container">
-                    <img src="images/instaicon.png" alt="Instagram" class="app-icon" />
+                    <img src="/api/placeholder/50/50" alt="Instagram" class="app-icon" />
                     <div class="card-title">Instagram</div>
                 </div>
-                <img src="images/gram.jpg" alt="Profile" class="profile-icon" />
+                <img src="/api/placeholder/50/50" alt="Profile" class="profile-icon" />
             </div>
-            <div class="login-text">Login to Instagram <span class="arrow">→</span></div>
+            <div class="login-text">Sync Social Spectrum <span class="arrow">→</span></div>
+            <div class="card-activity-indicator"></div>
         </div>
         
         <div class="card whatsapp-business">
             <div class="card-header">
                 <div class="card-title-container">
-                    <img src="images/whatsappbusinessicon.png" alt="WhatsApp Business" class="app-icon" />
+                    <img src="/api/placeholder/50/50" alt="WhatsApp Business" class="app-icon" />
                     <div class="card-title">WhatsApp Business</div>
                 </div>
-                <img src="images/whatsapp.png" alt="Profile" class="profile-icon" />
+                <img src="/api/placeholder/50/50" alt="Profile" class="profile-icon" />
             </div>
-            <div class="login-text">Login to Business <span class="arrow">→</span></div>
+            <div class="login-text">Enterprise Communication Hub <span class="arrow">→</span></div>
+            <div class="card-activity-indicator"></div>
         </div>
         
         <div class="card whatsapp-messenger">
             <div class="card-header">
                 <div class="card-title-container">
-                    <img src="images/whatsappicon.jpeg" alt="WhatsApp" class="app-icon" />
+                    <img src="/api/placeholder/50/50" alt="WhatsApp" class="app-icon" />
                     <div class="card-title">WhatsApp</div>
                 </div>
-                <img src="images/whatsapp.png" alt="Profile" class="profile-icon" />
+                <img src="/api/placeholder/50/50" alt="Profile" class="profile-icon" />
             </div>
-            <div class="login-text">Login to Messenger <span class="arrow">→</span></div>
+            <div class="login-text">Global Messenger Network <span class="arrow">→</span></div>
+            <div class="card-activity-indicator"></div>
         </div>
         
         <div class="card spotify">
             <div class="card-header">
                 <div class="card-title-container">
-                    <img src="images/spotify.png" alt="Spotify" class="app-icon" />
+                    <img src="/api/placeholder/50/50" alt="Spotify" class="app-icon" />
                     <div class="card-title">Spotify</div>
                 </div>
-                <img src="images/spotify.png" alt="Profile" class="profile-icon" />
+                <img src="/api/placeholder/50/50" alt="Profile" class="profile-icon" />
             </div>
-            <div class="login-text">Login to Spotify <span class="arrow">→</span></div>
+            <div class="login-text">Audio Wavelength Sync <span class="arrow">→</span></div>
+            <div class="card-activity-indicator"></div>
         </div>
         
         <div class="card youtube">
             <div class="card-header">
                 <div class="card-title-container">
-                    <img src="images/download.png" alt="YouTube" class="app-icon" />
+                    <img src="/api/placeholder/50/50" alt="YouTube" class="app-icon" />
                     <div class="card-title">YouTube</div>
                 </div>
-                <img src="images/yt.jpg" alt="Profile" class="profile-icon" />
+                <img src="/api/placeholder/50/50" alt="Profile" class="profile-icon" />
             </div>
-            <div class="login-text">Login to YouTube <span class="arrow">→</span></div>
+            <div class="login-text">Content Quantum Realm <span class="arrow">→</span></div>
+            <div class="card-activity-indicator"></div>
         </div>
         
         <div class="card facebook">
             <div class="card-header">
                 <div class="card-title-container">
-                    <img src="/api/placeholder/40/40" alt="Facebook" class="app-icon" />
+                    <img src="/api/placeholder/50/50" alt="Facebook" class="app-icon" />
                     <div class="card-title">Facebook</div>
                 </div>
-                <img src="/api/placeholder/40/40" alt="Profile" class="profile-icon" />
+                <img src="/api/placeholder/50/50" alt="Profile" class="profile-icon" />
             </div>
-            <div class="login-text">Login to Facebook <span class="arrow">→</span></div>
+            <div class="login-text">Social Nexus Protocol <span class="arrow">→</span></div>
+            <div class="card-activity-indicator"></div>
         </div>
         
         <div class="card twitter">
             <div class="card-header">
                 <div class="card-title-container">
-                    <img src="/api/placeholder/40/40" alt="X" class="app-icon" />
+                    <img src="/api/placeholder/50/50" alt="X" class="app-icon" />
                     <div class="card-title">X</div>
                 </div>
-                <img src="/api/placeholder/40/40" alt="Profile" class="profile-icon" />
+                <img src="/api/placeholder/50/50" alt="Profile" class="profile-icon" />
             </div>
-            <div class="login-text">Login to X <span class="arrow">→</span></div>
+            <div class="login-text">Thought Stream Terminal <span class="arrow">→</span></div>
+            <div class="card-activity-indicator"></div>
         </div>
         
         <div class="card linkedin">
             <div class="card-header">
                 <div class="card-title-container">
-                    <img src="/api/placeholder/40/40" alt="LinkedIn" class="app-icon" />
+                    <img src="/api/placeholder/50/50" alt="LinkedIn" class="app-icon" />
                     <div class="card-title">LinkedIn</div>
                 </div>
-                <img src="/api/placeholder/40/40" alt="Profile" class="profile-icon" />
+                <img src="/api/placeholder/50/50" alt="Profile" class="profile-icon" />
             </div>
-            <div class="login-text">Login to LinkedIn <span class="arrow">→</span></div>
+            <div class="login-text">Professional Network Matrix <span class="arrow">→</span></div>
+            <div class="card-activity-indicator"></div>
         </div>
     </div>
 
     <script>
-        // Get current time to set appropriate greeting
-        function setGreeting() {
+        // Advanced Greeting System
+        function setAdvancedGreeting() {
             const hour = new Date().getHours();
             const greeting = document.getElementById('greeting');
+            const backgrounds = [
+                'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
+                'linear-gradient(45deg, #6a11cb, #2575fc)',
+                'linear-gradient(45deg, #ff9966, #ff5e62)',
+                'linear-gradient(45deg, #3494e6, #ec6ead)'
+            ];
+            const dynamicBackground = document.getElementById('dynamicBackground');
+            
             let greetingText = '';
+            let backgroundStyle = '';
             
             if (hour >= 5 && hour < 12) {
-                greetingText = 'Good Morning, Pinchez';
+                greetingText = 'Quantum Morning Sync, Pinchez';
+                backgroundStyle = backgrounds[0];
             } else if (hour >= 12 && hour < 18) {
-                greetingText = 'Good Afternoon, Pinchez';
+                greetingText = 'Hyper Afternoon Protocol, Pinchez';
+                backgroundStyle = backgrounds[1];
             } else {
-                greetingText = 'Good Evening, Pinchez';
+                greetingText = 'Nocturnal Network Calibration, Pinchez';
+                backgroundStyle = backgrounds[2];
             }
             
             greeting.textContent = greetingText;
+            dynamicBackground.style.background = backgroundStyle;
         }
         
-        // Set greeting on page load
-        setGreeting();
+        // Particle Interaction System (Simplified Placeholder)
+        function createParticleSystem() {
+            const container = document.getElementById('particles');
+            
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = '3px';
+                particle.style.height = '3px';
+                particle.style.borderRadius = '50%';
+                particle.style.background = 'rgba(255,255,255,0.5)';
+                
+                particle.style.left = `${Math.random() * window.innerWidth}px`;
+                particle.style.top = `${Math.random() * window.innerHeight}px`;
+                
+                container.appendChild(particle);
+                
+                // Animate particle
+                const animationDuration = Math.random() * 5 + 3;
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${(Math.random() - 0.5) * 200}px, ${(Math.random() - 0.5) * 200}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: animationDuration * 1000,
+                    easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+                    fill: 'forwards'
+                });
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    container.removeChild(particle);
+                }, animationDuration * 1000);
+            }
+            
+            // Create particles periodically
+            setInterval(createParticle, 200);
+        }
         
-        // Update greeting every minute
-        setInterval(setGreeting, 60000);
+        // Initialize systems
+        setAdvancedGreeting();
+        createParticleSystem();
+        
+        // Update greeting periodically
+        setInterval(setAdvancedGreeting, 60000);
     </script>
 </body>
 </html>
