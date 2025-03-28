@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outfit Suggestion</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            color: #4CAF50;
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            color: white;
+            margin-left: 270px;
+            text-align: center;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .suggestion-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 60%;
+            text-align: center;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .outfit-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .outfit-display img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        .mannequin {
+            width: 200px;
+            height: 400px;
+            background: url('images/mannequin.png') no-repeat center center;
+            background-size: contain;
+            position: relative;
+        }
+        .suggestion-container button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .suggestion-container button:hover {
+            background: #45a049;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main-content {
+                margin-left: 220px;
+                padding: 20px;
+            }
+            .suggestion-container {
+                flex-direction: column;
+                width: 90%;
+            }
+            .mannequin {
+                width: 150px;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>AI Dressing</h2>
+        <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="wardrobe_upload.html"><i class="fas fa-tshirt"></i> Wardrobe Upload</a>
+        <a href="outfit_suggestion.html"><i class="fas fa-tshirt"></i> Outfit Suggestion</a>
+    </div>
+    <div class="main-content">
+        <h1>Today's Outfit Suggestion</h1>
+        <p>Based on the weather and your wardrobe, here's your outfit for the day:</p>
+        <div class="suggestion-container">
+            <div class="mannequin" id="mannequin">
+                <!-- Outfit will be placed on mannequin -->
+            </div>
+            <div class="outfit-display" id="outfitDisplay">
+                <!-- Suggested outfit will appear here -->
+            </div>
+        </div>
+        <button onclick="generateOutfit()">Generate Outfit</button>
+    </div>
+    <script>
+        function generateOutfit() {
+            let outfitDisplay = document.getElementById("outfitDisplay");
+            let mannequin = document.getElementById("mannequin");
+            outfitDisplay.innerHTML = "";
+            mannequin.innerHTML = "";
+            
+            let sampleOutfit = [
+                "shirt1.png",
+                "pants1.png",
+                "jacket1.png",
+                "shoes1.png"
+            ];
+            
+            sampleOutfit.forEach(item => {
+                let img = document.createElement("img");
+                img.src = "images/" + item;
+                outfitDisplay.appendChild(img);
+                
+                let mannequinImg = document.createElement("img");
+                mannequinImg.src = "images/" + item;
+                mannequinImg.style.position = "absolute";
+                mannequinImg.style.width = "100%";
+                mannequinImg.style.height = "100%";
+                mannequin.appendChild(mannequinImg);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Dressing Model - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar h2 {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 30px;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            color: white;
+        }
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 80%;
+            max-width: 800px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .card i {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        .options-container {
+            display: none;
+            margin-top: 15px;
+        }
+        .options-container button {
+            background: #fff;
+            color: #333;
+            border: none;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .options-container button:hover {
+            background: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>AI Dressing</h2>
+        <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="#"><i class="fas fa-user"></i> Profile</a>
+        <a href="#"><i class="fas fa-tshirt"></i> Wardrobe</a>
+        <a href="#"><i class="fas fa-shopping-cart"></i> Recommendations</a>
+        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+    <div class="main-content">
+        <h1>Welcome to Your AI Dressing Dashboard</h1>
+        <p>Manage your wardrobe, get outfit recommendations, and enhance your style.</p>
+        
+        <div class="dashboard-cards">
+            <div class="card" onclick="showOptions('dressCodeOptions')">
+                <i class="fas fa-tshirt"></i>
+                <h3>Select Your Dress Code</h3>
+                <div id="dressCodeOptions" class="options-container">
+                    <button>Casual</button>
+                    <button>Formal</button>
+                    <button>Streetwear</button>
+                </div>
+            </div>
+            <div class="card" onclick="showOptions('bodyTypeOptions')">
+                <i class="fas fa-user"></i>
+                <h3>Choose Your Body Type</h3>
+                <div id="bodyTypeOptions" class="options-container">
+                    <button>Slim</button>
+                    <button>Athletic</button>
+                    <button>Broad</button>
+                </div>
+            </div>
+            <div class="card" onclick="showOptions('weatherOutfitOptions')">
+                <i class="fas fa-cloud-sun"></i>
+                <h3>Check Weather & Outfit</h3>
+                <div id="weatherOutfitOptions" class="options-container">
+                    <button>Warm</button>
+                    <button>Cold</button>
+                    <button>Rainy</button>
+                </div>
+            </div>
+            <div class="card" onclick="showOptions('recommendationsOptions')">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Recommended Clothing</h3>
+                <div id="recommendationsOptions" class="options-container">
+                    <button>Shirts</button>
+                    <button>Pants</button>
+                    <button>Shoes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showOptions(id) {
+            document.querySelectorAll('.options-container').forEach(el => el.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
