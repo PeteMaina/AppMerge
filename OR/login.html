@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Wardrobe</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-color: #ecf0f1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .navigation {
+            display: flex;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navigation button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-container, .wardrobe-container, .outfit-container {
+            padding: 20px;
+            display: none;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-form input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .wardrobe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .clothing-item {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .clothing-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .clothing-item .item-details {
+            padding: 10px;
+            background-color: rgba(255,255,255,0.9);
+        }
+
+        .outfit-recommendation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .recommended-outfit {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .recommended-outfit img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="navigation">
+            <h2>Smart Wardrobe</h2>
+            <div>
+                <button onclick="app.showLogin()">Login</button>
+                <button onclick="app.showWardrobe()">Wardrobe</button>
+                <button onclick="app.showOutfitRecommender()">Outfit Recommender</button>
+            </div>
+        </div>
+
+        <div id="loginContainer" class="login-container">
+            <form class="login-form" onsubmit="app.login(event)">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        <div id="wardrobeContainer" class="wardrobe-container">
+            <h2>My Wardrobe</h2>
+            <div class="wardrobe-grid" id="wardrobeGrid">
+                <!-- Clothing items will be dynamically added here -->
+            </div>
+            <div class="upload-section">
+                <input type="file" id="fileInput" accept="image/*" multiple>
+                <select id="clothingType">
+                    <option value="top">Top</option>
+                    <option value="bottom">Bottom</option>
+                    <option value="outerwear">Outerwear</option>
+                    <option value="shoes">Shoes</option>
+                    <option value="accessories">Accessories</option>
+                </select>
+                <button onclick="app.uploadClothingItems()">Upload</button>
+            </div>
+        </div>
+
+        <div id="outfitContainer" class="outfit-container">
+            <h2>Outfit Recommender</h2>
+            <div class="outfit-recommendation">
+                <div id="weatherInfo">Checking weather...</div>
+                <button onclick="app.generateOutfit()">Generate Outfit</button>
+                <div id="recommendedOutfit" class="recommended-outfit">
+                    <!-- Recommended outfit will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class SmartWardrobeApp {
+            constructor() {
+                this.currentUser = null;
+                this.wardrobe = {
+                    top: [],
+                    bottom: [],
+                    outerwear: [],
+                    shoes: [],
+                    accessories: []
+                };
+                this.wornOutfits = [];
+                this.savedOutfits = [];
+
+                this.initializeApp();
+            }
+
+            initializeApp() {
+                // Show login by default
+                this.showLogin();
+                this.loadWardrobeFromStorage();
+            }
+
+            showLogin() {
+                this.hideAllContainers();
+                document.getElementById('loginContainer').style.display = 'block';
+            }
+
+            showWardrobe() {
+                if (!this.currentUser) {
+                    alert('Please login first');
+                    return;
+                }
+                this.hideAllContainers();
+                document.getElementById('wardrobeContainer').style.display = 'block';
+                this.renderWardrobe();
+            }
+
+            showOutfitRecommender() {
+                if (!this.currentUser) {
+                    alert('Please login first');
+                    return;
+                }
+                this.hideAllContainers();
+                document.getElementById('outfitContainer').style.display = 'block';
+                this.fetchWeather();
+            }
+
+            hideAllContainers() {
+                ['loginContainer', 'wardrobeContainer', 'outfitContainer'].forEach(id => {
+                    document.getElementById(id).style.display = 'none';
+                });
+            }
+
+            login(event) {
+                event.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                // Simple mock login (replace with actual authentication)
+                if (username && password) {
+                    this.currentUser = username;
+                    this.showOutfitRecommender();
+                } else {
+                    alert('Invalid login');
+                }
+            }
+
+            uploadClothingItems() {
+                const files = document.getElementById('fileInput').files;
+                const type = document.getElementById('clothingType').value;
+
+                for (let file of files) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const item = {
+                            id: Date.now() + Math.random(),
+                            image: e.target.result,
+                            type: type,
+                            addedDate: new Date().toISOString()
+                        };
+                        this.wardrobe[type].push(item);
+                        this.saveWardrobeToStorage();
+                        this.renderWardrobe();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            renderWardrobe() {
+                const grid = document.getElementById('wardrobeGrid');
+                grid.innerHTML = '';
+
+                Object.entries(this.wardrobe).forEach(([type, items]) => {
+                    items.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.classList.add('clothing-item');
+                        itemElement.innerHTML = `
+                            <img src="${item.image}" alt="${type} item">
+                            <div class="item-details">${type}</div>
+                        `;
+                        grid.appendChild(itemElement);
+                    });
+                });
+            }
+
+            saveWardrobeToStorage() {
+                localStorage.setItem(`wardrobe_${this.currentUser}`, JSON.stringify(this.wardrobe));
+            }
+
+            loadWardrobeFromStorage() {
+                if (this.currentUser) {
+                    const savedWardrobe = localStorage.getItem(`wardrobe_${this.currentUser}`);
+                    if (savedWardrobe) {
+                        this.wardrobe = JSON.parse(savedWardrobe);
+                    }
+                }
+            }
+
+            async fetchWeather() {
+                try {
+                    // Mock weather API
+                    const weatherInfo = document.getElementById('weatherInfo');
+                    weatherInfo.textContent = '22°C, Partly Cloudy';
+                } catch (error) {
+                    console.error('Weather fetch error:', error);
+                }
+            }
+
+            generateOutfit() {
+                const recommendedOutfit = document.getElementById('recommendedOutfit');
+                recommendedOutfit.innerHTML = ''; // Clear previous recommendation
+
+                // Filtering out recently worn outfits
+                const availableTop = this.filterRecentlyWornItems(this.wardrobe.top);
+                const availableBottom = this.filterRecentlyWornItems(this.wardrobe.bottom);
+                const availableShoes = this.filterRecentlyWornItems(this.wardrobe.shoes);
+
+                if (availableTop.length && availableBottom.length && availableShoes.length) {
+                    const top = this.getRandomItem(availableTop);
+                    const bottom = this.getRandomItem(availableBottom);
+                    const shoes = this.getRandomItem(availableShoes);
+
+                    // Record this outfit as worn
+                    this.wornOutfits.push({
+                        top: top.id,
+                        bottom: bottom.id,
+                        shoes: shoes.id,
+                        date: new Date().toISOString()
+                    });
+
+                    // Display recommended outfit
+                    recommendedOutfit.innerHTML = `
+                        <div>
+                            <h3>Today's Outfit</h3>
+                            <img src="${top.image}" alt="Top">
+                            <img src="${bottom.image}" alt="Bottom">
+                            <img src="${shoes.image}" alt="Shoes">
+                        </div>
+                    `;
+                } else {
+                    recommendedOutfit.innerHTML = '<p>Not enough variety in wardrobe to generate outfit</p>';
+                }
+            }
+
+            filterRecentlyWornItems(items) {
+                const oneMonthAgo = new Date();
+                oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+                return items.filter(item => {
+                    // Check if this item was part of any outfit worn in the last month
+                    const recentlyWorn = this.wornOutfits.some(outfit => 
+                        (outfit.top === item.id || 
+                         outfit.bottom === item.id || 
+                         outfit.shoes === item.id) && 
+                        new Date(outfit.date) > oneMonthAgo
+                    );
+                    return !recentlyWorn;
+                });
+            }
+
+            getRandomItem(items) {
+                return items[Math.floor(Math.random() * items.length)];
+            }
+        }
+
+        // Initialize the app
+        window.app = new SmartWardrobeApp();
+    </script>
+</body>
+</html>
