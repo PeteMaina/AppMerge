@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outfit History</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            color: #4CAF50;
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            color: white;
+            margin-left: 270px;
+            text-align: center;
+        }
+        .history-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 60%;
+            text-align: center;
+            overflow-y: auto;
+            max-height: 70vh;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        .history-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main-content {
+                margin-left: 220px;
+                padding: 20px;
+            }
+            .history-container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>AI Dressing</h2>
+        <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="wardrobe_upload.html"><i class="fas fa-tshirt"></i> Wardrobe Upload</a>
+        <a href="outfit_suggestion.html"><i class="fas fa-tshirt"></i> Outfit Suggestion</a>
+        <a href="outfit_history.html"><i class="fas fa-history"></i> Outfit History</a>
+    </div>
+    <div class="main-content">
+        <h1>Outfit History</h1>
+        <p>Check out the past outfits you've worn:</p>
+        <div class="history-container" id="historyContainer">
+            <!-- Outfit history will be displayed here -->
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let historyContainer = document.getElementById("historyContainer");
+            let outfitHistory = [
+                { date: "March 25, 2025", items: ["shirt1.png", "pants1.png", "shoes1.png"] },
+                { date: "March 26, 2025", items: ["shirt2.png", "pants2.png", "shoes2.png"] },
+                { date: "March 27, 2025", items: ["shirt3.png", "pants3.png", "shoes3.png"] }
+            ];
+            
+            outfitHistory.forEach(entry => {
+                let historyItem = document.createElement("div");
+                historyItem.classList.add("history-item");
+                
+                let dateElement = document.createElement("p");
+                dateElement.textContent = entry.date;
+                
+                let imageContainer = document.createElement("div");
+                entry.items.forEach(imgSrc => {
+                    let img = document.createElement("img");
+                    img.src = "images/" + imgSrc;
+                    imageContainer.appendChild(img);
+                });
+                
+                historyItem.appendChild(dateElement);
+                historyItem.appendChild(imageContainer);
+                historyContainer.appendChild(historyItem);
+            });
+        });
+    </script>
+</body>
+</html>
