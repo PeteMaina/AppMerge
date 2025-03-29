@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic 8-Ball</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: #222;
+            color: white;
+        }
+        .ball {
+            width: 200px;
+            height: 200px;
+            background-color: black;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            margin: auto;
+            cursor: pointer;
+            box-shadow: 0 0 20px white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ask the Magic 8-Ball!</h1>
+    <p>Click the ball to get your answer...</p>
+    <div class="ball" onclick="shakeBall()">Click Me!</div>
+    <p id="answer"></p>
+    <script>
+        function shakeBall() {
+            const answers = [
+                "Yes, absolutely!",
+                "No way, dude!",
+                "Ask again later...",
+                "Signs point to yes!",
+                "Not in a million years!",
+                "Maybe, if you're lucky...",
+                "Of course, why not?",
+                "Try again after coffee."
+            ];
+            document.getElementById("answer").textContent = 
+                answers[Math.floor(Math.random() * answers.length)];
+        }
+    </script>
+</body>
+</html>
