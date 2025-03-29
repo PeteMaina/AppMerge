@@ -115,13 +115,24 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let suggestionsContainer = document.getElementById("suggestionsContainer");
-            let suggestedItems = [
-                { name: "Black Leather Jacket", img: "jacket.png", link: "#" },
-                { name: "Slim Fit Jeans", img: "jeans.png", link: "#" },
-                { name: "White Sneakers", img: "sneakers.png", link: "#" }
+            let wardrobeHistory = JSON.parse(localStorage.getItem("wardrobeHistory")) || [];
+            let recentOutfits = JSON.parse(localStorage.getItem("recentOutfits")) || [];
+            
+            let recommendedItems = [
+                { name: "Black Leather Jacket", img: "jacket.png", link: "#", category: "jacket" },
+                { name: "Slim Fit Jeans", img: "jeans.png", link: "#", category: "jeans" },
+                { name: "White Sneakers", img: "sneakers.png", link: "#", category: "shoes" }
             ];
             
-            suggestedItems.forEach(item => {
+            let filteredRecommendations = recommendedItems.filter(item => {
+                return !wardrobeHistory.some(wardrobeItem => wardrobeItem.category === item.category);
+            });
+            
+            if (filteredRecommendations.length === 0) {
+                filteredRecommendations.push({ name: "Trendy Hoodie", img: "hoodie.png", link: "#" });
+            }
+            
+            filteredRecommendations.forEach(item => {
                 let suggestionItem = document.createElement("div");
                 suggestionItem.classList.add("suggestion-item");
                 
