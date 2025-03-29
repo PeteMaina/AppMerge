@@ -76,11 +76,27 @@
             background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
         .suggestion-item img {
             width: 50px;
             height: 50px;
             border-radius: 5px;
+        }
+        .rating {
+            display: flex;
+            gap: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+        .rating i {
+            color: #ccc;
+            transition: 0.3s;
+        }
+        .rating i.active {
+            color: gold;
         }
         @media (max-width: 768px) {
             .sidebar {
@@ -148,9 +164,25 @@
                 buyLink.style.color = "#4CAF50";
                 buyLink.style.textDecoration = "none";
                 
+                let ratingDiv = document.createElement("div");
+                ratingDiv.classList.add("rating");
+                for (let i = 1; i <= 5; i++) {
+                    let star = document.createElement("i");
+                    star.classList.add("fas", "fa-star");
+                    star.dataset.rating = i;
+                    star.addEventListener("click", function() {
+                        ratingDiv.querySelectorAll("i").forEach(star => star.classList.remove("active"));
+                        for (let j = 0; j < i; j++) {
+                            ratingDiv.children[j].classList.add("active");
+                        }
+                    });
+                    ratingDiv.appendChild(star);
+                }
+                
                 suggestionItem.appendChild(img);
                 suggestionItem.appendChild(nameElement);
                 suggestionItem.appendChild(buyLink);
+                suggestionItem.appendChild(ratingDiv);
                 
                 suggestionsContainer.appendChild(suggestionItem);
             });
