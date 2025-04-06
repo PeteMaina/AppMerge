@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Clone</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: #dadbd3;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .app {
+            background-color: #ededed;
+            height: 90vh;
+            width: 90vw;
+            box-shadow: -1px 4px 20px -6px rgba(0, 0, 0, 0.2);
+            display: flex;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            flex: 0.35;
+            border-right: 1px solid #dadbd3;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background-color: #f0f2f5;
+            align-items: center;
+            height: 60px;
+        }
+        
+        .sidebar-header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #54656f;
+        }
+        
+        .sidebar-search {
+            display: flex;
+            align-items: center;
+            background-color: #f6f6f6;
+            height: 49px;
+            padding: 10px;
+        }
+        
+        .sidebar-searchContainer {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            width: 100%;
+            height: 35px;
+            border-radius: 20px;
+            padding: 0 10px;
+        }
+        
+        .sidebar-searchContainer input {
+            border: none;
+            outline: none;
+            margin-left: 10px;
+            width: 100%;
+        }
+        
+        .sidebar-chats {
+            flex: 1;
+            background-color: white;
+            overflow-y: auto;
+        }
+        
+        .sidebar-chat {
+            display: flex;
+            padding: 13px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f6f6f6;
+        }
+        
+        .sidebar-chat:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .sidebar-chat-active {
+            background-color: #f0f2f5;
+        }
+        
+        .avatar {
+            width: 49px;
+            height: 49px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: #777;
+        }
+        
+        .sidebar-chat-info {
+            flex: 1;
+        }
+        
+        .sidebar-chat-info h2 {
+            font-size: 16px;
+            margin-bottom: 3px;
+            color: #111b21;
+        }
+        
+        .sidebar-chat-info p {
+            font-size: 14px;
+            color: #667781;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .sidebar-chat-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .chat-time {
+            font-size: 12px;
+            color: #667781;
+            margin-bottom: 5px;
+        }
+        
+        .chat-unread {
+            background-color: #25d366;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        /* Chat Styles */
+        .chat {
+            display: flex;
+            flex-direction: column;
+            flex: 0.65;
+        }
+        
+        .chat-header {
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            background-color: #f0f2f5;
+            height: 60px;
+            border-left: 1px solid #dadbd3;
+        }
+        
+        .chat-header-info {
+            flex: 1;
+            padding-left: 15px;
+        }
+        
+        .chat-header-info h3 {
+            font-size: 16px;
+            margin-bottom: 3px;
+            color: #111b21;
+        }
+        
+        .chat-header-info p {
+            font-size: 13px;
+            color: #667781;
+        }
+        
+        .chat-header-right {
+            display: flex;
+            gap: 15px;
+            color: #54656f;
+        }
+        
+        .chat-body {
+            flex: 1;
+            background-image: url('https://web.whatsapp.com/img/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png');
+            background-color: #efeae2;
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .chat-message {
+            position: relative;
+            font-size: 14px;
+            padding: 8px 9px;
+            width: fit-content;
+            border-radius: 8px;
+            background-color: white;
+            margin-bottom: 30px;
+            max-width: 65%;
+        }
+        
+        .chat-timestamp {
+            margin-left: 10px;
+            font-size: 11px;
+            color: #8696a0;
+        }
+        
+        .chat-receiver {
+            margin-left: auto;
+            background-color: #d9fdd3;
+        }
+        
+        .chat-name {
+            position: absolute;
+            top: -18px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #8696a0;
+        }
+        
+        .chat-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 62px;
+            background-color: #f0f2f5;
+            padding: 10px 16px;
+        }
+        
+        .chat-footer form {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-footer form input {
+            flex: 1;
+            outline: none;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+        
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #54656f;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .icon-btn:hover {
+            background-color: #dadbd3;
+        }
+        
+        .send-btn {
+            margin-left: 10px;
+            background-color: #00a884;
+            color: white;
+        }
+        
+        /* Icons */
+        .material-icons {
+            font-size: 24px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .app {
+                height: 100vh;
+                width: 100vw;
+            }
+            
+            .sidebar {
+                flex: 1;
+                display: block;
+            }
+            
+            .chat {
+                display: none;
+            }
+            
+            .sidebar-chat-active {
+                background-color: white;
+            }
+            
+            body.chat-active .sidebar {
+                display: none;
+            }
+            
+            body.chat-active .chat {
+                display: flex;
+                flex: 1;
+            }
+            
+            .back-button {
+                display: none;
+            }
+            
+            body.chat-active .back-button {
+                display: flex;
+            }
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="sidebar-header-right">
+                    <div class="icon-btn"><i class="fas fa-users"></i></div>
+                    <div class="icon-btn"><i class="fas fa-circle-notch"></i></div>
+                    <div class="icon-btn"><i class="fas fa-comment-alt"></i></div>
+                    <div class="icon-btn"><i class="fas fa-ellipsis-v"></i></div>
+                </div>
+            </div>
+            
+            <div class="sidebar-search">
+                <div class="sidebar-searchContainer">
+                    <i class="fas fa-search" style="color: #54656f;"></i>
+                    <input type="text" placeholder="Search or start new chat">
+                </div>
+            </div>
+            
+            <div class="sidebar-chats">
+                <div class="sidebar-chat" data-id="1">
+                    <div class="avatar">JD</div>
+                    <div class="sidebar-chat-info">
+                        <h2>John Doe</h2>
+                        <p>Hey, how are you doing?</p>
+                    </div>
+                    <div class="sidebar-chat-meta">
+                        <div class="chat-time">9:32 AM</div>
+                        <div class="chat-unread">3</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-chat" data-id="2">
+                    <div class="avatar">AF</div>
+                    <div class="sidebar-chat-info">
+                        <h2>Alice Freeman</h2>
+                        <p>I'll be there in 5 minutes</p>
+                    </div>
+                    <div class="sidebar-chat-meta">
+                        <div class="chat-time">Yesterday</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-chat" data-id="3">
+                    <div class="avatar">BC</div>
+                    <div class="sidebar-chat-info">
+                        <h2>Bob Carter</h2>
+                        <p>Did you see the latest update?</p>
+                    </div>
+                    <div class="sidebar-chat-meta">
+                        <div class="chat-time">Wed</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-chat" data-id="4">
+                    <div class="avatar">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="sidebar-chat-info">
+                        <h2>Family Group</h2>
+                        <p>Mom: When are you coming home?</p>
+                    </div>
+                    <div class="sidebar-chat-meta">
+                        <div class="chat-time">Tue</div>
+                        <div class="chat-unread">5</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-chat" data-id="5">
+                    <div class="avatar">EJ</div>
+                    <div class="sidebar-chat-info">
+                        <h2>Emma Johnson</h2>
+                        <p>Let's meet for coffee soon!</p>
+                    </div>
+                    <div class="sidebar-chat-meta">
+                        <div class="chat-time">Mon</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-chat" data-id="6">
+                    <div class="avatar">MS</div>
+                    <div class="sidebar-chat-info">
+                        <h2>Michael Smith</h2>
+                        <p>Can you send me the files?</p>
+                    </div>
+                    <div class="sidebar-chat-meta">
+                        <div class="chat-time">4/1/25</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-chat" data-id="7">
+                    <div class="avatar">LW</div>
+                    <div class="sidebar-chat-info">
+                        <h2>Lisa Williams</h2>
+                        <p>Great! I'll check it out.</p>
+                    </div>
+                    <div class="sidebar-chat-meta">
+                        <div class="chat-time">3/28/25</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Screen -->
+        <div class="chat">
+            <div class="chat-header">
+                <div class="icon-btn back-button"><i class="fas fa-arrow-left"></i></div>
+                <div class="avatar">JD</div>
+                <div class="chat-header-info">
+                    <h3>John Doe</h3>
+                    <p>Last seen today at 9:30 AM</p>
+                </div>
+                <div class="chat-header-right">
+                    <div class="icon-btn"><i class="fas fa-search"></i></div>
+                    <div class="icon-btn"><i class="fas fa-ellipsis-v"></i></div>
+                </div>
+            </div>
+            
+            <div class="chat-body">
+                <div class="chat-message">
+                    <span class="chat-name">John Doe</span>
+                    Hey there!
+                    <span class="chat-timestamp">9:25 AM</span>
+                </div>
+                
+                <div class="chat-message">
+                    <span class="chat-name">John Doe</span>
+                    How are you doing today?
+                    <span class="chat-timestamp">9:26 AM</span>
+                </div>
+                
+                <div class="chat-message chat-receiver">
+                    <span class="chat-name">You</span>
+                    I'm good, thanks! How about you?
+                    <span class="chat-timestamp">9:28 AM</span>
+                </div>
+                
+                <div class="chat-message">
+                    <span class="chat-name">John Doe</span>
+                    Doing well. Just wanted to check if we're still on for the meeting at 2?
+                    <span class="chat-timestamp">9:30 AM</span>
+                </div>
+                
+                <div class="chat-message chat-receiver">
+                    <span class="chat-name">You</span>
+                    Yes, definitely! I'll bring the presentation we discussed.
+                    <span class="chat-timestamp">9:31 AM</span>
+                </div>
+                
+                <div class="chat-message">
+                    <span class="chat-name">John Doe</span>
+                    Great! Looking forward to it. Also, did you get a chance to review the documents I sent yesterday?
+                    <span class="chat-timestamp">9:32 AM</span>
+                </div>
+                
+                <div class="chat-message">
+                    <span class="chat-name">John Doe</span>
+                    I think there are some points we should discuss before the meeting.
+                    <span class="chat-timestamp">9:32 AM</span>
+                </div>
+                
+                <div class="chat-message">
+                    <span class="chat-name">John Doe</span>
+                    Let me know when you get this message.
+                    <span class="chat-timestamp">9:32 AM</span>
+                </div>
+            </div>
+            
+            <div class="chat-footer">
+                <div class="icon-btn"><i class="fas fa-smile"></i></div>
+                <div class="icon-btn"><i class="fas fa-paperclip"></i></div>
+                <form>
+                    <input type="text" placeholder="Type a message">
+                </form>
+                <div class="icon-btn send-btn"><i class="fas fa-paper-plane"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat selection functionality
+        document.querySelectorAll('.sidebar-chat').forEach(chat => {
+            chat.addEventListener('click', function() {
+                // Mobile responsive view
+                document.body.classList.add('chat-active');
+                
+                // Update active chat
+                document.querySelectorAll('.sidebar-chat').forEach(c => {
+                    c.classList.remove('sidebar-chat-active');
+                });
+                this.classList.add('sidebar-chat-active');
+                
+                // Get chat data
+                const chatId = this.getAttribute('data-id');
+                const chatName = this.querySelector('h2').textContent;
+                
+                // Update chat header
+                document.querySelector('.chat-header .avatar').textContent = chatName.split(' ').map(n => n[0]).join('');
+                document.querySelector('.chat-header-info h3').textContent = chatName;
+            });
+        });
+        
+        // Back button functionality (mobile)
+        document.querySelector('.back-button').addEventListener('click', function() {
+            document.body.classList.remove('chat-active');
+        });
+        
+        // Message input handling
+        const messageForm = document.querySelector('.chat-footer form');
+        const messageInput = messageForm.querySelector('input');
+        const sendButton = document.querySelector('.send-btn');
+        
+        const sendMessage = () => {
+            if (messageInput.value.trim() !== '') {
+                const chatBody = document.querySelector('.chat-body');
+                
+                // Create message element
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('chat-message', 'chat-receiver');
+                
+                // Add name
+                const nameSpan = document.createElement('span');
+                nameSpan.classList.add('chat-name');
+                nameSpan.textContent = 'You';
+                messageDiv.appendChild(nameSpan);
+                
+                // Add message text
+                messageDiv.appendChild(document.createTextNode(messageInput.value));
+                
+                // Add timestamp
+                const now = new Date();
+                const hours = now.getHours() % 12 || 12;
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.classList.add('chat-timestamp');
+                timeSpan.textContent = `${hours}:${minutes} ${ampm}`;
+                messageDiv.appendChild(timeSpan);
+                
+                // Add to chat
+                chatBody.appendChild(messageDiv);
+                
+                // Clear input and scroll to bottom
+                messageInput.value = '';
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+        };
+        
+        // Handle send button click
+        sendButton.addEventListener('click', sendMessage);
+        
+        // Handle enter key press
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            sendMessage();
+        });
+        
+        // Initialize chat body scroll position
+        const chatBody = document.querySelector('.chat-body');
+        chatBody.scrollTop = chatBody.scrollHeight;
+    </script>
+</body>
+</html>
