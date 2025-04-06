@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Business</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #eaeaea;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            display: flex;
+            height: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background-color: #008069;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 24px;
+        }
+
+        .header-icon {
+            cursor: pointer;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 30%;
+            min-width: 300px;
+            border-right: 1px solid #e1e1e1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+        }
+
+        .search-container {
+            padding: 8px 12px;
+            background-color: #f0f2f5;
+        }
+
+        .search-box {
+            background-color: white;
+            border-radius: 20px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        /* Status Section */
+        .status-section {
+            padding: 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .status-title {
+            font-size: 14px;
+            color: #41525d;
+            font-weight: 500;
+        }
+
+        .status-more {
+            color: #008069;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .status-list {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .status-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            position: relative;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-border {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #008069;
+        }
+
+        .status-img {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .status-name {
+            font-size: 12px;
+            color: #667781;
+            width: 60px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Chat List */
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            display: flex;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f2f5;
+            cursor: pointer;
+        }
+
+        .chat-item:hover {
+            background-color: #f5f6f6;
+        }
+
+        .chat-avatar {
+            width: 49px;
+            height: 49px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .chat-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+
+        .chat-name {
+            font-weight: 500;
+            color: #111b21;
+        }
+
+        .chat-time {
+            font-size: 12px;
+            color: #667781;
+        }
+
+        .chat-message {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chat-message-text {
+            font-size: 14px;
+            color: #667781;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
+
+        .chat-message-count {
+            background-color: #25d366;
+            color: white;
+            border-radius: 50%;
+            min-width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            padding: 0 5px;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #efeae2;
+            position: relative;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            background-color: #f0f2f5;
+            border-left: 1px solid #e1e1e1;
+        }
+
+        .chat-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .chat-profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .chat-profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-profile-name {
+            font-weight: 500;
+            color: #111b21;
+        }
+
+        .chat-profile-status {
+            font-size: 13px;
+            color: #667781;
+        }
+
+        .chat-header-icons {
+            display: flex;
+            gap: 24px;
+            color: #54656f;
+        }
+
+        .chat-header-icon {
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d1d1d1' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 65%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            clear: both;
+        }
+
+        .message-received {
+            float: left;
+            background-color: #fff;
+            border-radius: 7.5px 7.5px 7.5px 0;
+            padding: 6px 7px 8px 9px;
+        }
+
+        .message-sent {
+            float: right;
+            background-color: #d9fdd3;
+            border-radius: 7.5px 7.5px 0 7.5px;
+            padding: 6px 7px 8px 9px;
+            margin-left: auto;
+        }
+
+        .message-text {
+            font-size: 14px;
+            color: #111b21;
+            word-wrap: break-word;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #667781;
+            margin-left: auto;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .chat-input-container {
+            display: flex;
+            align-items: center;
+            background-color: #f0f2f5;
+            padding: 10px 16px;
+            gap: 8px;
+        }
+
+        .chat-input-emoji, .chat-input-attach {
+            color: #54656f;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 12px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .chat-input-send {
+            color: #54656f;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: 100%;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                min-width: 0;
+                display: block;
+            }
+
+            .chat-section {
+                display: none;
+            }
+
+            .sidebar.hidden {
+                display: none;
+            }
+
+            .chat-section.active {
+                display: flex;
+            }
+
+            .back-button {
+                display: block;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+
+            .chat-header {
+                padding: 10px;
+            }
+
+            .chat-messages {
+                padding: 10px;
+            }
+        }
+
+        /* Hidden by default for mobile view */
+        .back-button {
+            display: none;
+            color: white;
+        }
+
+        /* Hidden screens */
+        .hidden {
+            display: none;
+        }
+
+        /* Business features */
+        .business-badge {
+            background-color: #008069;
+            color: white;
+            font-size: 10px;
+            padding: 2px 4px;
+            border-radius: 2px;
+            margin-left: 5px;
+        }
+
+        .business-tools {
+            padding: 12px 16px;
+            background-color: #f0f2f5;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .business-tools-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #41525d;
+            margin-bottom: 8px;
+        }
+
+        .business-tools-list {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .business-tools-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .business-tool {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 70px;
+            cursor: pointer;
+        }
+
+        .business-tool-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #008069;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            font-size: 20px;
+        }
+
+        .business-tool-name {
+            font-size: 12px;
+            color: #41525d;
+            text-align: center;
+        }
+
+        /* Tab menu */
+        .tab-menu {
+            display: flex;
+            background-color: #f0f2f5;
+            padding: 0 16px;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 16px 0;
+            font-weight: 500;
+            color: #54656f;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid #008069;
+            color: #008069;
+        }
+
+        /* Loading/welcome screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+
+        .welcome-screen img {
+            width: 250px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-screen h2 {
+            margin-bottom: 10px;
+            color: #41525d;
+        }
+
+        .welcome-screen p {
+            color: #667781;
+            margin-bottom: 20px;
+            max-width: 500px;
+        }
+
+        /* Catalog display */
+        .catalog-section {
+            padding: 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .catalog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .catalog-title {
+            font-size: 14px;
+            color: #41525d;
+            font-weight: 500;
+        }
+
+        .catalog-more {
+            color: #008069;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .catalog-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .catalog-item {
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .catalog-item-img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .catalog-item-details {
+            padding: 8px;
+        }
+
+        .catalog-item-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: #111b21;
+            margin-bottom: 4px;
+        }
+
+        .catalog-item-price {
+            font-size: 12px;
+            color: #008069;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar / Home Screen -->
+        <div class="sidebar" id="sidebar">
+            <div class="header">
+                <h1>WhatsApp Business</h1>
+                <div class="header-icons">
+                    <div class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+                        </svg>
+                    </div>
+                    <div class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                        </svg>
+                    </div>
+                    <div class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-menu">
+                <div class="tab active">Chats</div>
+                <div class="tab">Updates</div>
+                <div class="tab">Calls</div>
+            </div>
+
+            <div class="search-container">
+                <div class="search-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#54656f" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                    <input type="text" placeholder="Search or start new chat">
+                </div>
+            </div>
+
+            <div class="business-tools">
+                <div class="business-tools-title">Business Tools</div>
+                <div class="business-tools-list">
+                    <div class="business-tool">
+                        <div class="business-tool-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                            </svg>
+                        </div>
+                        <div class="business-tool-name">Catalog</div>
+                    </div>
+                    <div class="business-tool">
+                        <div class="business-tool-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
+                            </svg>
+                        </div>
+                        <div class="business-tool-name">Catalog</div>
+                    </div>
+                    <div class="business-tool">
+                        <div class="business-tool-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                        </div>
+                        <div class="business-tool-name">Collections</div>
+                    </div>
+                    <div class="business-tool">
+                        <div class="business-tool-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                            </svg>
+                        </div>
+                        <div class="business-tool-name">Quick Replies</div>
+                    </div>
+                    <div class="business-tool">
+                        <div class="business-tool-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                            </svg>
+                        </div>
+                        <div class="business-tool-name">Labels</div>
+                    </div>
+                </div>
+            </div>
